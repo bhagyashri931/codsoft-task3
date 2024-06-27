@@ -1,4 +1,6 @@
 Task 3: Password generator
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 import random
 import string
 
@@ -7,22 +9,33 @@ def generate_password(length):
     password = ''.join(random.choice(characters) for _ in range(length))
     return password
 
-def main():
-    while True:
-        try:
-            length = int(input("Enter the desired length for the password: "))
-            if length <= 0:
-                print("Please enter a positive number.")
-                continue
+def generate_password_gui():
+    try:
+        length = simpledialog.askinteger("Password Length", "Enter the desired length for the password:")
+        if length is None:
+            return  # User canceled dialog
 
-            password = generate_password(length)
-            print(f"Generated password: {password}")
-        except ValueError:
-            print("Invalid input. Please enter a numeric value.")
+        if length <= 0:
+            messagebox.showwarning("Warning", "Please enter a positive number.")
+            return
 
-        again = input("Do you want to generate another password? (yes/no): ")
-        if again.lower() != 'yes':
-            break
+        password = generate_password(length)
+        messagebox.showinfo("Generated Password", f"Generated password: {password}")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter a numeric value.")
+
+def main_gui():
+    root = tk.Tk()
+    root.title("Password Generator")
+
+    tk.Label(root, text="Password Generator", font=("Helvetica", 16)).pack(pady=10)
+
+    tk.Button(root, text="Generate Password", command=generate_password_gui).pack(pady=20)
+
+    tk.Button(root, text="Exit", command=root.quit).pack(pady=10)
+
+    root.mainloop()
 
 if __name__ == "__main__":
-    main()
+    main_gui()
+
